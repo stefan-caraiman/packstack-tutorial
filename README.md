@@ -118,7 +118,7 @@ DNS2=8.8.8.8
 
 # Get the network setup script
 
-~ $ wget https://raw.githubusercontent.com/stefan-caraiman/packstack-tutorial/master/script.sh
+~ $ wget https://raw.githubusercontent.com/stefan-caraiman/packstack-tutorial/master/network_init.sh
 ~ $ chmod +x network_init.sh
 
 # Also don't forget to modify the values from the script
