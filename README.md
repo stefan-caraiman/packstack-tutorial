@@ -16,6 +16,7 @@
 Note: The Hypervisor used for this example is **VMWare Workstation 11**
 
 **IMPORTANT:** Do not forget to enable ```Virtualize Intel VT-x/EPT or AMD-V/RVI``` in Processors settings.
+
 **SIDE-NOTE:** The NATs subnet IP in this scenario is 10.0.2.0 with its default gateway set on 10.0.2.2, please change the values used in the tutorial accordingly to your NAT values.
 ##Setting up the system
 
