@@ -10,13 +10,13 @@
 - Memory: 6GB RAM (Recommended)
 - HDD - SATA - Minimum 60 GB (Recommended *Preallocated*)
 - Network:
-    - Network Adapter :  **Bridged(Replicate network connection state)**
+    - Network Adapter :  **NAT**
 - Operating system - **CentOS 7** (Recommended) 
 
 Note: The Hypervisor used for this example is **VMWare Workstation 11**
 
 **IMPORTANT:** Do not forget to enable ```Virtualize Intel VT-x/EPT or AMD-V/RVI``` in Processors settings.
-
+**SIDE-NOTE:** The NATs subnet IP in this scenario is 10.0.2.0 with its default gateway set on 10.0.2.2, please change the values used in the tutorial accordingly to your NAT values.
 ##Setting up the system
 
 ###Prepare the network
@@ -74,7 +74,7 @@ LC_ALL=en_US.utf-8
 ```vim
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
-192.168.133.141 localhost work-argus-ci-test # The hostname IP should be set accordingly
+10.0.2.22 localhost work-argus-ci-test # The hostname IP should be set accordingly
 
 ```
 
@@ -82,7 +82,7 @@ LC_ALL=en_US.utf-8
 ```bash
 # Modify the network config, the name might differ
 
-~ $ sudo vim /etc/sysconfig/network-scripts/ifcfg-enp0s25
+~ $ sudo vim /etc/sysconfig/network-scripts/ifcfg-en-device-name
 ```
 
 ```vim
@@ -103,10 +103,10 @@ PEERROUTES=yes
 IPV6_PEERDNS=yes
 IPV6_PEERROUTES=yes
 
-IPADDR=192.168.133.141 # Set the IP Address that should be used by the mahcine
+IPADDR=10.0.2.22 # Set the IP Address that should be used by the mahcine
 NETMASK=255.255.255.0
-GATEWAY=192.168.133.1
-DNS1=192.168.133.1
+GATEWAY=10.0.2.2
+DNS1=10.0.2.2
 DNS2=8.8.8.8
 
 ```
@@ -172,7 +172,7 @@ DNS2=8.8.8.8
 
 # Configure the newly created public network
 
-~ $ neutron subnet-create public 192.168.133.0/24 --name public_subnet --enable-dhcp=False --allocation-pool start=192.168.133.141,end=192.168.133.151 --gateway 192.168.133.1
+~ $ neutron subnet-create public 10.0.2.0/24 --name public_subnet --enable-dhcp=False --allocation-pool start=10.0.2.140,end=10.0.2.160 --gateway 10.0.2.2
 
 # Create a new router and set the gateway for it
 
@@ -200,13 +200,26 @@ DNS2=8.8.8.8
 ~ $ sudo virtualenv /usr/share/openstack-tempest-10.0.0/.venv
 ~ $ source /usr/share/openstack-tempest-10.0.0/.venv/bin/activate
 # Install the dependecies under the virtualenv
-~ $ pip install -r /usr/share/openstack-tempest-kilo/requirements.txt
-~ $ pip install -r /usr/share/openstack-tempest-kilo/test-requirements.txt
+~ $ pip install -r /usr/share/openstack-tempest-10.0.0/requirements.txt
+~ $ pip install -r /usr/share/openstack-tempest-10.0.0/test-requirements.txt
 
 ```
 
 ## Other details
-**IMPORTANT:** In case you wish to re-run packstack with a updated answerfile you can simply run the following:
+**IMPORTANT 1:** In case you wish to re-run packstack with a updated answerfile you can simply run the following:
+**IMPORTANT 2:** It might happen that nova.conf virt_type value is set on qemu instead of kvm(Windows instaces won't be able to boot up if that's the case).In that case please do the following:
+
+```bash
+
+~ $ sudo vim /etc/nova/nova.conf
+
+# Search for virt_type and replace qemu with kvm
+
+# You can then either reboot the machine or restart the services 
+
+~ $ sudo openstack-service restart
+
+```
 
 ####NOTE: by default ```$youranswerfile``` is called packstack-answer-$date-$time.txt
 
