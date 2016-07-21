@@ -228,6 +228,40 @@ DNS2=8.8.8.8
 ~ $ sudo packstack --answer-file=$youranswerfile
 ```
 
+#### Pip erros
+If you upgrated pip `>8.1.0` and installed python packages with `yum` pip might not work(`pip freeze` in particular ).
+Force pip to `8.1.0` with this command `sudo pip install pip==8.1.0` this seems a problem for CentOS 7.2
+because pip got more strict with package naming.
+More info here :
+ - https://github.com/pypa/pip/issues/3764
+ - https://github.com/pypa/pip/issues/3681
+
+#### ServerFault when runing tempest
+ There is a dependency issue with nova when tempest will try to generete a new key pair will get `500` response code
+ from the server resulting in a `ServerFault: Got server fault`. To check if this is the error see with `pip freeze` if you have
+ `paramiko=2.0.0+` and in `/var/log/nova/nova-api.log` you get something similar with this.
+
+ ```
+ api.py", line 4068, in _generate_key_pair
+2016-04-29 14:56:58.381 2175 ERROR nova.api.openstack.extensions return crypto.generate_key_pair()
+2016-04-29 14:56:58.381 2175 ERROR nova.api.openstack.extensions File "/openstack/venvs/nova-master/lib/python2.7/site-packages/nova/crypto.py", line 152, in generate_key_pair
+2016-04-29 14:56:58.381 2175 ERROR nova.api.openstack.extensions key = generate_key(bits)
+2016-04-29 14:56:58.381 2175 ERROR nova.api.openstack.extensions File "/openstack/venvs/nova-master/lib/python2.7/site-packages/nova/crypto.py", line 144, in generate_key
+2016-04-29 14:56:58.381 2175 ERROR nova.api.openstack.extensions key = paramiko.RSAKey(vals=(rsa.e, rsa.n))
+2016-04-29 14:56:58.381 2175 ERROR nova.api.openstack.extensions TypeError: __init__() got an unexpected keyword argument 'vals'
+ ```
+
+ To fix this you can try to force a working version of `paramiko` withh this command
+ `sudo pip install paramiko==1.16.0`.I'm not sure about the side efects for this, this may break other thing.
+This seems to be fixed but some issues still exist on launchpad, it might be the enviroment or
+the rdo install.
+
+ More info you can find here :
+ - https://bugs.launchpad.net/openstack-ansible/+bug/1576755
+ - https://bugs.launchpad.net/python-novaclient/+bug/1365251
+ - https://bugs.launchpad.net/nova/+bug/1585515
+
+
 ##For more details please consult the links below:
 
 - https://www.rdoproject.org/install/quickstart/
