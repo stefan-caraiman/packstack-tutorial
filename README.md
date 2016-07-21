@@ -221,6 +221,7 @@ DNS2=8.8.8.8
 ~ $ sudo openstack-service restart
 
 ```
+**IMPORTANT 3:** Also in case of Windows 10 and server 2016 there are some cpu features that have to be enabled. So in nova.conf search for cpu_mode option and set it to host-passthrough. Restart the service.
 
 ####NOTE: by default ```$youranswerfile``` is called packstack-answer-$date-$time.txt
 
