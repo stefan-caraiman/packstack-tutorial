@@ -222,7 +222,24 @@ You need to have the argus setup in a virtualenv before this step.
 
 ```
 **IMPORTANT 2:** It might happen that nova.conf virt_type value is set on qemu instead of kvm(Windows instaces won't be able to boot up if that's the case).In that case please do the following:
+
 **IMPORTANT 3:** Also in case of Windows 10 and server 2016 there are some cpu features that have to be enabled. So in nova.conf search for cpu_mode option and set it to host-passthrough. Restart the service.
+
+**IMPORTANT 4:** If you encounter issues with tempest config, you can also generate it as it follows:
+
+```bash
+#Create your tempest directory and change into it
+~ $ mkdir ~/tempest && cd ~/tempest
+
+#Initialize the directory by running
+~ $ /usr/share/openstack-tempest-10.0.0/tools/configure-tempest-directory
+
+#Configure tempest
+~ $ tools/config_tempest.py --deployer-input ~/tempest-deployer-input.conf \
+--create identity.uri $OS_AUTH_URL identity.admin_password $OS_PASSWORD
+```
+
+**IMPORTANT 4:** To avoid some errors and some failing tests we should add read permissions to "/etc/neutron" folder.
 
 ####NOTE: by default ```$youranswerfile``` is called packstack-answer-$date-$time.txt
 
