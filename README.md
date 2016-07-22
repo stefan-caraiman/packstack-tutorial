@@ -239,6 +239,8 @@ You need to have the argus setup in a virtualenv before this step.
 --create identity.uri $OS_AUTH_URL identity.admin_password $OS_PASSWORD
 ```
 
+**IMPORTANT 4:** To avoid some errors and some failing tests we should add read permissions to "/etc/neutron" folder.
+
 ####NOTE: by default ```$youranswerfile``` is called packstack-answer-$date-$time.txt
 
 ```bash
