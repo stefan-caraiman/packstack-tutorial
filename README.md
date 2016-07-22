@@ -190,25 +190,25 @@ DNS2=8.8.8.8
 ~ $ neutron subnet-update --dns-nameserver 8.8.8.8 "private_subnet_id"
 ```
 
-## Install tempest as a service
-
+## Install tempest for ArgusCI
+You need to have the argus setup in a virtualenv before this step.
 ```bash
 
-~ $ sudo yum install openstack-tempest
-# Install pip
-~ $ pip install virtualenv 
-# Create an virtualenv
-~ $ sudo virtualenv /usr/share/openstack-tempest-10.0.0/.venv
-~ $ source /usr/share/openstack-tempest-10.0.0/.venv/bin/activate
+~ $ cd ~/
+~ $ git clone https://github.com/openstack/tempest.git
+~ $ cd tempest
+~ $ git checkout 11.0.0 # change version for mitaka and argus
+# activate argus virtualenv
+~ $ source ~/cloudbase-init-ci/.venv/argus/bin/activate # this may differ
+~ $ pip install ~/tempest 
 # Install the dependecies under the virtualenv
-~ $ pip install -r /usr/share/openstack-tempest-10.0.0/requirements.txt
-~ $ pip install -r /usr/share/openstack-tempest-10.0.0/test-requirements.txt
+~ $ pip install -r ~/tempest/requirements.txt
+~ $ pip install -r ~/tempest/test-requirements.txt
 
 ```
 
 ## Other details
 **IMPORTANT 1:** In case you wish to re-run packstack with a updated answerfile you can simply run the following:
-**IMPORTANT 2:** It might happen that nova.conf virt_type value is set on qemu instead of kvm(Windows instaces won't be able to boot up if that's the case).In that case please do the following:
 
 ```bash
 
@@ -221,6 +221,7 @@ DNS2=8.8.8.8
 ~ $ sudo openstack-service restart
 
 ```
+**IMPORTANT 2:** It might happen that nova.conf virt_type value is set on qemu instead of kvm(Windows instaces won't be able to boot up if that's the case).In that case please do the following:
 **IMPORTANT 3:** Also in case of Windows 10 and server 2016 there are some cpu features that have to be enabled. So in nova.conf search for cpu_mode option and set it to host-passthrough. Restart the service.
 
 ####NOTE: by default ```$youranswerfile``` is called packstack-answer-$date-$time.txt
