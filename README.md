@@ -239,7 +239,11 @@ You need to have the argus setup in a virtualenv before this step.
 --create identity.uri $OS_AUTH_URL identity.admin_password $OS_PASSWORD
 ```
 
-**IMPORTANT 4:** To avoid some errors and some failing tests we should add read permissions to "/etc/neutron" folder.
+**IMPORTANT 5:** To avoid some errors and some failing tests we should add read permissions to "/etc/neutron" folder.
+
+
+**IMPORTANT 6:** Because of some changes in Mitaka we have to edit in /etc/heat/heat.conf the 'trusts_delegated_roles' field. To avoid any 'missing required credential' type of errors, that field should be left empty.
+
 
 ####NOTE: by default ```$youranswerfile``` is called packstack-answer-$date-$time.txt
 
