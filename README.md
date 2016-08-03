@@ -210,6 +210,13 @@ You need to have the argus setup in a virtualenv before this step.
 ## Other details
 **IMPORTANT 1:** In case you wish to re-run packstack with a updated answerfile you can simply run the following:
 
+####NOTE: by default ```$youranswerfile``` is called packstack-answer-$date-$time.txt
+
+```bash
+~ $ sudo packstack --answer-file=$youranswerfile
+```
+
+**IMPORTANT 2:** It might happen that nova.conf virt_type value is set on qemu instead of kvm(Windows instaces won't be able to boot up if that's the case). In that case please do the following:
 ```bash
 
 ~ $ sudo vim /etc/nova/nova.conf
@@ -221,11 +228,10 @@ You need to have the argus setup in a virtualenv before this step.
 ~ $ sudo openstack-service restart
 
 ```
-**IMPORTANT 2:** It might happen that nova.conf virt_type value is set on qemu instead of kvm(Windows instaces won't be able to boot up if that's the case).In that case please do the following:
 
-**IMPORTANT 3:** Also in case of Windows 10 and server 2016 there are some cpu features that have to be enabled. So in nova.conf search for cpu_mode option and set it to host-passthrough. Restart the service.
+**IMPORTANT 3:** In the case of Windows 10 and Windows Server 2016 there are some CPU features that have to be enabled.In nova.conf search for the `cpu_mode` field and set it to host-passthrough. Restart the service.
 
-**IMPORTANT 4:** If you encounter issues with tempest config, you can also generate it as it follows:
+**IMPORTANT 4:** If you encounter issues with generating the tempest config, you can also generate it as it follows:
 
 ```bash
 #Create your tempest directory and change into it
@@ -239,17 +245,12 @@ You need to have the argus setup in a virtualenv before this step.
 --create identity.uri $OS_AUTH_URL identity.admin_password $OS_PASSWORD
 ```
 
-**IMPORTANT 5:** To avoid some errors and some failing tests we should add read permissions to "/etc/neutron" folder.
+**IMPORTANT 5:** To avoid some errors with running tests, read permissions should be added to the "/etc/neutron" folder.
 
 
-**IMPORTANT 6:** Because of some changes in Mitaka we have to edit in /etc/heat/heat.conf the 'trusts_delegated_roles' field. To avoid any 'missing required credential' type of errors, that field should be left empty.
+**IMPORTANT 6:** Because of some changes in Mitaka we have to edit in /etc/heat/heat.conf the `trusts_delegated_roles` field. To avoid any `missing required credential` type of errors, the field should be left empty.
 
 
-####NOTE: by default ```$youranswerfile``` is called packstack-answer-$date-$time.txt
-
-```bash
-~ $ sudo packstack --answer-file=$youranswerfile
-```
 
 #### Pip erros
 If you upgrated pip `>8.1.0` and installed python packages with `yum` pip might not work(`pip freeze` in particular ).
